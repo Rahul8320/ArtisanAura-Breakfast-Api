@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using ArtisanAura.Api.ServiceErrors;
+using ArtisanAura.Contracts.Breakfast;
 using ErrorOr;
 
 namespace ArtisanAura.Api.Models
@@ -77,6 +78,16 @@ namespace ArtisanAura.Api.Models
                 savory,
                 sweet
             );
+        }
+
+        public static ErrorOr<Breakfast> Form(CreateBreakfastRequest request)
+        {
+            return Create(request.Name, request.Description, request.StartDateTime, request.EndDateTime, request.Savory, request.Sweet);
+        }
+
+        public static ErrorOr<Breakfast> Form(Guid id, UpsertBreakfastRequest request)
+        {
+            return Create(request.Name, request.Description, request.StartDateTime, request.EndDateTime, request.Savory, request.Sweet, id);
         }
     }
 }

@@ -23,65 +23,129 @@ POST / api / breakfast;
 ### Create Breakfast Request
 
 ```json
-
+{
+  "name": "Aloo Paratha",
+  "description": "Whole wheat bread stuffed with spiced mashed potatoes.",
+  "startDateTime": "2022-04-08T08:00:00",
+  "endDateTime": "2022-04-08T11:00:00",
+  "savory": [
+    "Whole wheat flour",
+    "Potatoes",
+    "Onions",
+    "Green chilies",
+    "Spices"
+  ],
+  "sweet": ["Ghee", "Sugar"]
+}
 ```
 
 ### Create Breakfast Response
 
 ```json
+201 Created
+```
 
+```json
+{
+  "id": "ae890f1f-bfd9-483e-933f-a5d151ce2458",
+  "name": "Aloo Paratha",
+  "description": "Whole wheat bread stuffed with spiced mashed potatoes.",
+  "startDateTime": "2022-04-08T08:00:00",
+  "endDateTime": "2022-04-08T11:00:00",
+  "lastModifiedDateTime": "2023-10-05T17:48:54.873537Z",
+  "savory": [
+    "Whole wheat flour",
+    "Potatoes",
+    "Onions",
+    "Green chilies",
+    "Spices"
+  ],
+  "sweet": ["Ghee", "Sugar"]
+}
 ```
 
 ## Get Breakfast
 
 ```js
-GET / api / breakfast;
+GET / api / breakfast/{{id}};
 ```
 
 ### Get Breakfast Request
 
 ```json
-
+{}
 ```
 
 ### Get Breakfast Response
 
 ```json
+200 OK
+```
 
+```json
+{
+  "id": "ae890f1f-bfd9-483e-933f-a5d151ce2458",
+  "name": "Aloo Paratha",
+  "description": "Whole wheat bread stuffed with spiced mashed potatoes.",
+  "startDateTime": "2022-04-08T08:00:00",
+  "endDateTime": "2022-04-08T11:00:00",
+  "lastModifiedDateTime": "2023-10-05T17:48:54.873537Z",
+  "savory": [
+    "Whole wheat flour",
+    "Potatoes",
+    "Onions",
+    "Green chilies",
+    "Spices"
+  ],
+  "sweet": ["Ghee", "Sugar"]
+}
 ```
 
 ## Update Breakfast
 
 ```js
-PUT / api / breakfast;
+PUT / api / breakfast/{{id}};
 ```
 
 ### Update Breakfast Request
 
 ```json
-
+{
+  "name": "Aloo Paratha Edited",
+  "description": "Whole wheat bread stuffed with spiced mashed potatoes.",
+  "startDateTime": "2022-04-08T08:00:00",
+  "endDateTime": "2022-04-08T11:00:00",
+  "savory": [
+    "Whole wheat flour",
+    "Potatoes",
+    "Onions",
+    "Green chilies",
+    "Spices"
+  ],
+  "sweet": ["Ghee", "Sugar"]
+}
 ```
 
 ### Update Breakfast Response
 
 ```json
-
+204 No Content
 ```
 
 ## Delete Breakfast
 
 ```js
-DELETE / api / breakfast;
+DELETE / api / breakfast/{{id}};
 ```
 
 ### Delete Breakfast Request
 
 ```json
-
+{}
 ```
 
 ### Delete Breakfast Response
 
 ```json
-
+204 No Content
 ```

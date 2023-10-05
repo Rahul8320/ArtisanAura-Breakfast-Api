@@ -19,14 +19,7 @@ namespace ArtisanAura.Api.Controllers
         [HttpPost]
         public IActionResult CreateBreakfast(CreateBreakfastRequest request)
         {
-            ErrorOr<Breakfast> requestToBreakfastResult = Breakfast.Create(
-                request.Name,
-                request.Description,
-                request.StartDateTime,
-                request.EndDateTime,
-                request.Savory,
-                request.Sweet
-            );
+            ErrorOr<Breakfast> requestToBreakfastResult = Breakfast.Form(request);
 
             if (requestToBreakfastResult.IsError)
             {
@@ -57,15 +50,7 @@ namespace ArtisanAura.Api.Controllers
         [HttpPut("{id:guid}")]
         public IActionResult UpsertBreakfast(Guid id, UpsertBreakfastRequest request)
         {
-            ErrorOr<Breakfast> requestToBreakfastResult = Breakfast.Create(
-                request.Name,
-                request.Description,
-                request.StartDateTime,
-                request.EndDateTime,
-                request.Savory,
-                request.Sweet,
-                id
-            );
+            ErrorOr<Breakfast> requestToBreakfastResult = Breakfast.Form(id, request);
 
             if (requestToBreakfastResult.IsError)
             {
