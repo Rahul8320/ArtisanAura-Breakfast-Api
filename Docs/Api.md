@@ -17,7 +17,7 @@
 ## Create Breakfast
 
 ```js
-POST / api / breakfast;
+POST {{host}}/api/breakfast;
 ```
 
 ### Create Breakfast Request
@@ -67,7 +67,7 @@ POST / api / breakfast;
 ## Get Breakfast
 
 ```js
-GET / api / breakfast/{{id}};
+GET {{host}}/api/breakfast/{{id}};
 ```
 
 ### Get Breakfast Request
@@ -104,7 +104,7 @@ GET / api / breakfast/{{id}};
 ## Update Breakfast
 
 ```js
-PUT / api / breakfast/{{id}};
+PUT {{host}}/api/breakfast/{{id}};
 ```
 
 ### Update Breakfast Request
@@ -135,7 +135,7 @@ PUT / api / breakfast/{{id}};
 ## Delete Breakfast
 
 ```js
-DELETE / api / breakfast/{{id}};
+DELETE {{host}}/api/breakfast/{{id}};
 ```
 
 ### Delete Breakfast Request
