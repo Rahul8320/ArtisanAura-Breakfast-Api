@@ -6,5 +6,7 @@ namespace ArtisanAura.Api.Services.Interfaces
     {
         void CreateBreakfast(Breakfast breakfast);
         Breakfast GetBreakfast(Guid id);
+        void UpsertBreakfast(Breakfast breakfast);
+        void DeleteBreakfast(Guid id);
     }
 }
