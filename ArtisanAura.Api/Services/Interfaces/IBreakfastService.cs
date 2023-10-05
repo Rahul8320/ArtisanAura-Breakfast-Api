@@ -5,9 +5,9 @@ namespace ArtisanAura.Api.Services.Interfaces
 {
     public interface IBreakfastService
     {
-        void CreateBreakfast(Breakfast breakfast);
+        ErrorOr<Created> CreateBreakfast(Breakfast breakfast);
         ErrorOr<Breakfast> GetBreakfast(Guid id);
-        void UpsertBreakfast(Breakfast breakfast);
-        void DeleteBreakfast(Guid id);
+        ErrorOr<UpsertBreakfastResult> UpsertBreakfast(Breakfast breakfast);
+        ErrorOr<Deleted> DeleteBreakfast(Guid id);
     }
 }

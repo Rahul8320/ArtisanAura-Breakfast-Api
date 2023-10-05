@@ -1,5 +1,5 @@
 using ArtisanAura.Api.Models;
-using ArtisanAura.Api.ServiceErrors;
+using ArtisanAura.Api.Services;
 using ArtisanAura.Api.Services.Interfaces;
 using ArtisanAura.Contracts.Breakfast;
 using ErrorOr;
@@ -7,9 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ArtisanAura.Api.Controllers
 {
-    [ApiController]
-    [Route("api/breakfast")]
-    public class BreakfastController : ControllerBase
+    public class BreakfastController : ApiController
     {
         private readonly IBreakfastService _iBreakfastService;
 
@@ -31,24 +29,14 @@ namespace ArtisanAura.Api.Controllers
                 request.Savory,
                 request.Sweet
             );
-            _iBreakfastService.CreateBreakfast(breakfast);
 
-            var response = new BreakfastResponse(
-                breakfast.Id,
-                breakfast.Name,
-                breakfast.Description,
-                breakfast.StartDateTime,
-                breakfast.EndDateTime,
-                breakfast.LastModifiedDateTime,
-                breakfast.Savory,
-                breakfast.Sweet
-            );
+            ErrorOr<Created> createdBreakfastResult = _iBreakfastService.CreateBreakfast(breakfast);
 
-            return CreatedAtAction(
-                actionName: nameof(GetBreakfast),
-                routeValues: new { id = breakfast.Id },
-                value: response
-            );
+            if (createdBreakfastResult.IsError)
+            {
+                return Problem(createdBreakfastResult.Errors);
+            }
+            return CreatedAtGetBreakfast(breakfast);
         }
 
         [HttpGet("{id:guid}")]
@@ -56,23 +44,10 @@ namespace ArtisanAura.Api.Controllers
         {
             ErrorOr<Breakfast> getBreakfastResult = _iBreakfastService.GetBreakfast(id);
 
-            if (getBreakfastResult.IsError && getBreakfastResult.FirstError == Errors.Breakfast.NotFound)
-            {
-                return NotFound();
-            }
-            var breakfast = getBreakfastResult.Value;
-
-            var response = new BreakfastResponse(
-               breakfast.Id,
-               breakfast.Name,
-               breakfast.Description,
-               breakfast.StartDateTime,
-               breakfast.EndDateTime,
-               breakfast.LastModifiedDateTime,
-               breakfast.Savory,
-               breakfast.Sweet
-           );
-            return Ok(response);
+            return getBreakfastResult.Match(
+             breakfast => Ok(MapBreakfastResponse(breakfast)),
+             Problem
+            );
         }
 
         [HttpPut("{id:guid}")]
@@ -88,16 +63,42 @@ namespace ArtisanAura.Api.Controllers
                 request.Savory,
                 request.Sweet
             );
-            _iBreakfastService.UpsertBreakfast(breakfast);
+            ErrorOr<UpsertBreakfastResult> upsertBreakfastResult = _iBreakfastService.UpsertBreakfast(breakfast);
 
-            return NoContent();
+            return upsertBreakfastResult.Match(
+                upsert => upsert.IsNewlyCreated ? CreatedAtGetBreakfast(breakfast) : NoContent(),
+                Problem
+            );
         }
 
         [HttpDelete("{id:guid}")]
         public IActionResult DeleteBreakfast(Guid id)
         {
-            _iBreakfastService.DeleteBreakfast(id);
-            return NoContent();
+            ErrorOr<Deleted> deletedBreakfastResult = _iBreakfastService.DeleteBreakfast(id);
+            return deletedBreakfastResult.Match(deleted => NoContent(), Problem);
+        }
+
+        private static BreakfastResponse MapBreakfastResponse(Breakfast breakfast)
+        {
+            return new BreakfastResponse(
+               breakfast.Id,
+               breakfast.Name,
+               breakfast.Description,
+               breakfast.StartDateTime,
+               breakfast.EndDateTime,
+               breakfast.LastModifiedDateTime,
+               breakfast.Savory,
+               breakfast.Sweet
+           );
+        }
+
+        private CreatedAtActionResult CreatedAtGetBreakfast(Breakfast breakfast)
+        {
+            return CreatedAtAction(
+                actionName: nameof(GetBreakfast),
+                routeValues: new { id = breakfast.Id },
+                value: MapBreakfastResponse(breakfast)
+            );
         }
     }
 }
