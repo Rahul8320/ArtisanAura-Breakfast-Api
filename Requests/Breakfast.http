@@ -1,5 +1,5 @@
 @host = http://localhost:5036
-@id = b4bca600-af37-43ee-9428-88c8a39b99a2
+@id = 1b81e97e-6815-4844-832d-0407b812e8ab
 
 ### Create Breakfast Request
 POST {{host}}/api/breakfast
@@ -31,7 +31,7 @@ PUT {{host}}/api/breakfast/{{id}}
 Content-Type: application/json
 
 {
-    "name": "Aloo Paratha",
+    "name": "Aloo Paratha 2nd gen",
     "description": "Whole wheat bread stuffed with spiced mashed potatoes.",
     "startDateTime": "2022-04-08T08:00:00",
     "endDateTime": "2022-04-08T11:00:00",

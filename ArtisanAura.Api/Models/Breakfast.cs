@@ -1,27 +1,27 @@
 using System.ComponentModel.DataAnnotations;
+using ArtisanAura.Api.ServiceErrors;
+using ErrorOr;
 
 namespace ArtisanAura.Api.Models
 {
     public class Breakfast
     {
-        [Required]
+        public const int MinNameLength = 3;
+        public const int MaxNameLength = 50;
+
+        public const int MinDescriptionLength = 50;
+        public const int MaxDescriptionLength = 150;
+
         public Guid Id { get; }
-        [Required]
-        [MinLength(3)]
         public string Name { get; }
-        [Required]
-        [MinLength(10)]
         public string Description { get; }
-        [Required]
         public DateTime StartDateTime { get; }
-        [Required]
         public DateTime EndDateTime { get; }
-        [Required]
         public DateTime LastModifiedDateTime { get; }
         public List<string> Savory { get; }
         public List<string> Sweet { get; }
 
-        public Breakfast(
+        private Breakfast(
             Guid id,
             string name,
             string description,
@@ -31,14 +31,52 @@ namespace ArtisanAura.Api.Models
             List<string> savory,
             List<string> sweet)
         {
-            this.Id = id;
-            this.Name = name;
-            this.Description = description;
-            this.StartDateTime = startDateTime;
-            this.EndDateTime = endDateTime;
-            this.LastModifiedDateTime = lastModifiedDateTime;
-            this.Savory = savory;
-            this.Sweet = sweet;
+            Id = id;
+            Name = name;
+            Description = description;
+            StartDateTime = startDateTime;
+            EndDateTime = endDateTime;
+            LastModifiedDateTime = lastModifiedDateTime;
+            Savory = savory;
+            Sweet = sweet;
+        }
+
+        public static ErrorOr<Breakfast> Create(
+            string name,
+            string description,
+            DateTime startDateTime,
+            DateTime endDateTime,
+            List<string> savory,
+            List<string> sweet,
+            Guid? id = null)
+        {
+            List<Error> errors = [];
+
+            if (name.Length is < MinNameLength or > MaxNameLength)
+            {
+                errors.Add(Errors.Breakfast.InvalidName);
+            }
+
+            if (description.Length is < MinDescriptionLength or > MaxDescriptionLength)
+            {
+                errors.Add(Errors.Breakfast.InvalidDescription);
+            }
+
+            if (errors.Count > 0)
+            {
+                return errors;
+            }
+
+            return new Breakfast(
+                id ?? Guid.NewGuid(),
+                name,
+                description,
+                startDateTime,
+                endDateTime,
+                DateTime.UtcNow,
+                savory,
+                sweet
+            );
         }
     }
 }

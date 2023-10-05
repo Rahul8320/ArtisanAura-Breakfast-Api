@@ -19,24 +19,28 @@ namespace ArtisanAura.Api.Controllers
         [HttpPost]
         public IActionResult CreateBreakfast(CreateBreakfastRequest request)
         {
-            var breakfast = new Breakfast(
-                Guid.NewGuid(),
+            ErrorOr<Breakfast> requestToBreakfastResult = Breakfast.Create(
                 request.Name,
                 request.Description,
                 request.StartDateTime,
                 request.EndDateTime,
-                DateTime.UtcNow,
                 request.Savory,
                 request.Sweet
             );
 
+            if (requestToBreakfastResult.IsError)
+            {
+                return Problem(requestToBreakfastResult.Errors);
+            }
+
+            var breakfast = requestToBreakfastResult.Value;
+
             ErrorOr<Created> createdBreakfastResult = _iBreakfastService.CreateBreakfast(breakfast);
 
-            if (createdBreakfastResult.IsError)
-            {
-                return Problem(createdBreakfastResult.Errors);
-            }
-            return CreatedAtGetBreakfast(breakfast);
+            return createdBreakfastResult.Match(
+                created => CreatedAtGetBreakfast(breakfast),
+                Problem
+            );
         }
 
         [HttpGet("{id:guid}")]
@@ -53,16 +57,23 @@ namespace ArtisanAura.Api.Controllers
         [HttpPut("{id:guid}")]
         public IActionResult UpsertBreakfast(Guid id, UpsertBreakfastRequest request)
         {
-            var breakfast = new Breakfast(
-                id,
+            ErrorOr<Breakfast> requestToBreakfastResult = Breakfast.Create(
                 request.Name,
                 request.Description,
                 request.StartDateTime,
                 request.EndDateTime,
-                DateTime.UtcNow,
                 request.Savory,
-                request.Sweet
+                request.Sweet,
+                id
             );
+
+            if (requestToBreakfastResult.IsError)
+            {
+                return Problem(requestToBreakfastResult.Errors);
+            }
+
+            var breakfast = requestToBreakfastResult.Value;
+
             ErrorOr<UpsertBreakfastResult> upsertBreakfastResult = _iBreakfastService.UpsertBreakfast(breakfast);
 
             return upsertBreakfastResult.Match(
