@@ -1,0 +1,52 @@
+@host = http://localhost:5036
+@id = 00000000-0000-0000-0000-000000000000
+
+### Create Breakfast Request
+POST {{host}}/api/breakfast
+Content-Type: application/json
+
+{
+    "name": "Aloo Paratha",
+    "description": "Whole wheat bread stuffed with spiced mashed potatoes.",
+    "startDateTime": "2022-04-08T08:00:00",
+    "endDateTime": "2022-04-08T11:00:00",
+    "savory": [
+        "Whole wheat flour",
+        "Potatoes", 
+        "Onions", 
+        "Green chilies", 
+        "Spices"
+    ],
+    "sweet": [
+        "Ghee",
+        "Sugar"
+    ]
+}
+
+### Get Breakfast Request
+GET {{host}}/api/breakfast/{{id}}
+
+### Upsert Breakfast Request
+PUT {{host}}/api/breakfast/{{id}}
+Content-Type: application/json
+
+{
+    "name": "Aloo Paratha",
+    "description": "Whole wheat bread stuffed with spiced mashed potatoes.",
+    "startDateTime": "2022-04-08T08:00:00",
+    "endDateTime": "2022-04-08T11:00:00",
+    "savory": [
+        "Whole wheat flour",
+        "Potatoes", 
+        "Onions", 
+        "Green chilies", 
+        "Spices"
+    ],
+    "sweet": [
+        "Ghee",
+        "Sugar"
+    ]
+}
+
+### Delete Breakfast Request
+DELETE {{host}}/api/breakfast/{{id}}
