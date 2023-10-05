@@ -1,6 +1,8 @@
 using ArtisanAura.Api.Models;
+using ArtisanAura.Api.ServiceErrors;
 using ArtisanAura.Api.Services.Interfaces;
 using ArtisanAura.Contracts.Breakfast;
+using ErrorOr;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ArtisanAura.Api.Controllers
@@ -52,7 +54,14 @@ namespace ArtisanAura.Api.Controllers
         [HttpGet("{id:guid}")]
         public IActionResult GetBreakfast(Guid id)
         {
-            Breakfast breakfast = _iBreakfastService.GetBreakfast(id);
+            ErrorOr<Breakfast> getBreakfastResult = _iBreakfastService.GetBreakfast(id);
+
+            if (getBreakfastResult.IsError && getBreakfastResult.FirstError == Errors.Breakfast.NotFound)
+            {
+                return NotFound();
+            }
+            var breakfast = getBreakfastResult.Value;
+
             var response = new BreakfastResponse(
                breakfast.Id,
                breakfast.Name,
